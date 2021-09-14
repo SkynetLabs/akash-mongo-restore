@@ -7,7 +7,7 @@ services:
     container_name: scheduler
     depends_on:
       - mongodb
-    environment:
+    env:
       - MONGODB_DATABASE=akash_mongo
       - MONGODB_USERNAME=root
       - MONGODB_PASSWORD=password
