@@ -17,7 +17,7 @@ ENV MONGODB_HOST=mongo
 ENV MONGODB_PORT=27017
 ENV MONGODB_USER=root
 
-ENV BACKUP_SCHEDULE="*/15 * * * *"
+ENV BACKUP_SCHEDULE="*/5 * * * *"
 
 COPY ./crontab /crontab
 

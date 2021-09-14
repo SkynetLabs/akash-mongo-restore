@@ -1,0 +1,18 @@
+version: "3.4"
+
+services:
+  scheduler:
+    build:
+      context: ./scheduler
+    container_name: scheduler
+    depends_on:
+      - mongodb
+    env_file: .env
+
+  mongodb:
+    build:
+      context: ./mongodb
+    restart: always
+    container_name: mongodb
+    ports:
+      - "27017:27017"

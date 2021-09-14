@@ -2,16 +2,19 @@ version: "3.4"
 
 services:
   scheduler:
-    build:
-      context: ./scheduler
+    image: skynetlabs/akash-mongo-scheduler:v1.0.1
     container_name: scheduler
     depends_on:
       - mongodb
-    env_file: .env
+    environment:
+      - MONGODB_DATABASE=akash_mongo
+      - MONGODB_USERNAME=root
+      - MONGODB_PASSWORD=password
+      - SKYNET_SEED=supersecret
+      - SKYNET_DATAKEY=mongobackup
 
   mongodb:
-    build:
-      context: ./mongodb
+    image: skynetlabs/akash-mongo-mongodb:v1.0.0
     restart: always
     container_name: mongodb
     ports:

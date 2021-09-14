@@ -18,10 +18,10 @@ gpg --symmetric \
     --batch \
     --passphrase $SKYNET_SEED \
     db.archive
-rm db.archive
+rm -f db.archive
 
 echo "Uploading backup"
 skylinkv2 update $SKYNET_DATAKEY db.archive.gpg --keyfile /tmp/keys.txt
-rm db.archive.gpg
+rm -f db.archive.gpg
 
 echo "Backup complete"

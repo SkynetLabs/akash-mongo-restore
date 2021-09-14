@@ -2,36 +2,31 @@
 version: "2.0"
 
 services:
-  cron:
-    image: ghcr.io/ovrclk/akash-postgres-restore:v0.0.4
-    env:
+  scheduler:
+    image: skynetlabs/akash-mongo-scheduler:v1.0.1
+    container_name: scheduler
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_DATABASE=akash_mongo
       - MONGODB_USERNAME=root
       - MONGODB_PASSWORD=password
-      - MONGODB_DATABASE=akash_mongo
-      - SKYNET_SEED=mysecret
+      - SKYNET_SEED=testingfordaniel11
       - SKYNET_DATAKEY=mongobackup
-    depends_on:
-      - service: mongodb
+
   mongodb:
-    image: mongo
+    image: skynetlabs/akash-mongo-mongodb:v1.0.0
+    restart: always
     container_name: mongodb
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./docker-entrypoint-initdb.d/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-    environment:
-      MONGO_INITDB_DATABASE: root-db
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
     expose:
       - port: 27017
         to:
           - global: true
-          - service: cron
+          - service: scheduler
 
 profiles:
   compute:
-    cron:
+    scheduler:
       resources:
         cpu:
           units: 0.5
@@ -39,7 +34,7 @@ profiles:
           size: 1Gi
         storage:
           size: 1Gi
-    postgres:
+    mongodb:
       resources:
         cpu:
           units: 0.5
@@ -50,19 +45,19 @@ profiles:
   placement:
     dcloud:
       pricing:
-        cron:
+        scheduler:
           denom: uakt
           amount: 10
-        postgres:
+        mongodb:
           denom: uakt
           amount: 10
 
 deployment:
-  cron:
+  scheduler:
     dcloud:
-      profile: cron
+      profile: scheduler
       count: 1
-  postgres:
+  mongodb:
     dcloud:
-      profile: postgres
+      profile: mongodb
       count: 1
